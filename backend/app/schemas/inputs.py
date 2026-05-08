@@ -20,3 +20,21 @@ class RecommendationResponse(BaseModel):
     farming_method_tip: str
     risk_alerts: list[str]
     soil_improvement_tips: list[str]
+
+class MLModelInput(BaseModel):
+    n: int = Field(..., description="Nitrogen")
+    p: int = Field(..., description="Phosphorus")
+    k: int = Field(..., description="Potassium")
+    temp: float = Field(..., description="Temperature")
+    hum: float = Field(..., description="Humidity")
+    ph: float = Field(..., description="pH level")
+    rain: float = Field(..., description="Rainfall")
+    budget: int = Field(..., description="Budget")
+    state: str = Field(..., description="State name")
+
+class MLModelResponseItem(BaseModel):
+    crop: str
+    confidence: str
+
+class MLModelResponse(BaseModel):
+    priority_list: list[MLModelResponseItem]

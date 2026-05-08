@@ -1,9 +1,32 @@
-import { ArrowRight, Leaf, Droplets, Sun } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Leaf, Droplets, Sun, X } from 'lucide-react';
 import './HeroSection.css';
 
 const HeroSection = () => {
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <section className="hero">
+      {showVideo && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 9999, display: 'flex',
+          justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(5px)'
+        }} onClick={() => setShowVideo(false)}>
+          <div style={{ position: 'relative', width: '80%', maxWidth: '1000px' }} onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowVideo(false)} style={{
+              position: 'absolute', top: '-40px', right: '0', background: 'transparent',
+              border: 'none', cursor: 'pointer', color: 'white'
+            }}>
+              <X size={32} />
+            </button>
+            <video controls autoPlay style={{ width: '100%', borderRadius: '12px', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+              <source src="/Demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      )}
       <div className="container hero-container">
         <div className="hero-content animate-fade-in">
           <div className="badge">
@@ -22,7 +45,7 @@ const HeroSection = () => {
             <a href="#analyze" className="btn-primary">
               Analyze My Farm <ArrowRight size={18} />
             </a>
-            <button className="btn-secondary">View Demo</button>
+            <button className="btn-secondary" onClick={() => setShowVideo(true)}>View Demo</button>
           </div>
           
           <div className="features-grid">

@@ -1,5 +1,54 @@
 import random
-from app.schemas.inputs import FarmInput, RecommendationResponse
+import os
+import pickle
+import numpy as np
+from app.schemas.inputs import FarmInput, RecommendationResponse, MLModelInput, MLModelResponseItem
+
+# Prepare path for ML models
+ML_DIR = os.path.dirname(__file__)
+MODEL_PATH = os.path.join(ML_DIR, 'crop_model_v3.pkl')
+ENCODER_PATH = os.path.join(ML_DIR, 'state_encoder.pkl')
+
+model = None
+state_le = None
+
+try:
+    if os.path.exists(MODEL_PATH) and os.path.exists(ENCODER_PATH):
+        model = pickle.load(open(MODEL_PATH, 'rb'))
+        state_le = pickle.load(open(ENCODER_PATH, 'rb'))
+    else:
+        print(f"Warning: ML models not found at {ML_DIR}. Please download them.")
+except Exception as e:
+    print(f"Error loading models: {e}")
+
+def get_ai_recommendations(data: MLModelInput):
+    if model is None or state_le is None:
+        return {"error": "Models not loaded. Please ensure crop_model_v3.pkl and state_encoder.pkl are in the app/ml/ directory."}
+
+    # Convert state name to number
+    try:
+        state_encoded = state_le.transform([data.state])[0]
+    except Exception as e:
+        return {"error": f"Error encoding state: {e}"}
+    
+    # Prepare input for the AI
+    features = [[data.n, data.p, data.k, data.temp, data.hum, data.ph, data.rain, data.budget, state_encoded]]
+    
+    # Get probabilities for Top 3
+    try:
+        probs = model.predict_proba(features)[0]
+        top_3_idx = np.argsort(probs)[-3:][::-1]
+        
+        results = []
+        for idx in top_3_idx:
+            results.append(MLModelResponseItem(
+                crop=str(model.classes_[idx]).upper(),
+                confidence=f"{probs[idx] * 100:.2f}%"
+            ))
+        
+        return {"priority_list": results}
+    except Exception as e:
+        return {"error": f"Prediction error: {e}"}
 
 def get_recommendations(data: FarmInput) -> list[RecommendationResponse]:
     """
