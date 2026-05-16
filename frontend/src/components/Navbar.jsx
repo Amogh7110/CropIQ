@@ -9,7 +9,7 @@ const Navbar = () => {
           <div className="logo-icon">
             <Sprout size={28} color="#10b981" />
           </div>
-          <span className="logo-text">AgriSense</span>
+          <span className="logo-text">AgriSmart</span>
         </div>
         
         <div className="nav-links">
