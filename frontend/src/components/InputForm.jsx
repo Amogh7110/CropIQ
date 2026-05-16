@@ -37,11 +37,25 @@ const InputForm = ({ onResults }) => {
         const address = geoRes.data.address;
         const stateName = address.state || address.region || "Maharashtra";
 
+        // Map for typical historical average rainfall (mm) for Indian States
+        const stateRainfallMap = {
+          "Andhra Pradesh": 900, "Arunachal Pradesh": 2800, "Assam": 2800, "Bihar": 1200, "Chhattisgarh": 1300, 
+          "Goa": 3000, "Gujarat": 1000, "Haryana": 600, "Himachal Pradesh": 1200, "Jharkhand": 1300, 
+          "Karnataka": 1200, "Kerala": 2900, "Madhya Pradesh": 1100, "Maharashtra": 2000, "Manipur": 1500, 
+          "Meghalaya": 2800, "Mizoram": 2500, "Nagaland": 2000, "Odisha": 1500, "Punjab": 600, 
+          "Rajasthan": 400, "Sikkim": 2700, "Tamil Nadu": 1000, "Telangana": 900, "Tripura": 2200, 
+          "Uttar Pradesh": 1200, "Uttarakhand": 1500, "West Bengal": 1800
+        };
+        
+        // Use average rainfall per season for the ML model (dividing annual by roughly 10 as an approximation for the model range)
+        const annualRain = stateRainfallMap[stateName] || 1500;
+        const modelRainfall = (annualRain / 10).toFixed(1);
+
         setFormData(prev => ({
           ...prev,
           temp: current.temperature_2m,
           hum: current.relative_humidity_2m,
-          rain: (daily.precipitation_sum[0] || 0) * 10, // Approx value for ML model
+          rain: modelRainfall, // Using realistic state-level average instead of daily forecast
           state: stateName
         }));
       } catch (err) {
@@ -105,7 +119,22 @@ const InputForm = ({ onResults }) => {
 
           <div className="input-group">
             <label className="input-label">State Name</label>
-            <input type="text" name="state" className="form-control" value={formData.state} onChange={handleChange} required />
+            <select name="state" className="form-control" value={formData.state} onChange={handleChange} required>
+              <option value="" disabled>Select a state...</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="West Bengal">West Bengal</option>
+            </select>
           </div>
           
           <div className="input-group">

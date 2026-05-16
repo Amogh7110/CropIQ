@@ -27,12 +27,23 @@ def get_ai_recommendations(data: MLModelInput):
 
     # Convert state name to number
     try:
-        state_encoded = state_le.transform([data.state])[0]
+        # Fallback to 'Maharashtra' if the typed state is not in the model's vocabulary
+        state_name = data.state
+        if state_name not in state_le.classes_:
+            print(f"Warning: State '{state_name}' not in vocabulary. Falling back to 'Maharashtra'")
+            state_name = 'Maharashtra'
+            
+        state_encoded = state_le.transform([state_name])[0]
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {"error": f"Error encoding state: {e}"}
     
-    # Prepare input for the AI
-    features = [[data.n, data.p, data.k, data.temp, data.hum, data.ph, data.rain, data.budget, state_encoded]]
+    # Prepare input for the AI as a DataFrame to avoid UserWarning
+    import pandas as pd
+    feature_names = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'budget', 'state_encoded']
+    features_list = [[data.n, data.p, data.k, data.temp, data.hum, data.ph, data.rain, data.budget, state_encoded]]
+    features = pd.DataFrame(features_list, columns=feature_names)
     
     # Get probabilities for Top 3
     try:
@@ -48,6 +59,8 @@ def get_ai_recommendations(data: MLModelInput):
         
         return {"priority_list": results}
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {"error": f"Prediction error: {e}"}
 
 def get_recommendations(data: FarmInput) -> list[RecommendationResponse]:
