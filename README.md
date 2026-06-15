@@ -1,6 +1,6 @@
-# AgriSmart 🌾: AI-Powered Smart Crop Recommendation System
+# CropIQ 🌾: AI-Powered Smart Crop Recommendation System
 
-AgriSmart is an advanced agricultural decision-support system designed to empower farmers and agricultural stakeholders by providing intelligent, data-driven crop recommendations. By analyzing environmental conditions, soil health metrics, and economic factors, AgriSmart leverages cutting-edge Machine Learning to suggest the most optimal and profitable crops to cultivate.
+CropIQ is an advanced agricultural decision-support system designed to empower farmers and agricultural stakeholders by providing intelligent, data-driven crop recommendations. By analyzing environmental conditions, soil health metrics, and economic factors, CropIQ leverages cutting-edge Machine Learning to suggest the most optimal and profitable crops to cultivate.
 
 ## 🌟 Key Features
 
@@ -13,7 +13,7 @@ AgriSmart is an advanced agricultural decision-support system designed to empowe
 
 ## 🏗️ Project Architecture & Data Flow
 
-AgriSmart is divided into two main components: a frontend UI and an AI-powered backend.
+CropIQ is divided into two main components: a frontend UI and an AI-powered backend.
 
 ### 1. Frontend (React + Vite)
 - Built with modern React and Vite for fast development and rendering.
@@ -33,7 +33,7 @@ AgriSmart is divided into two main components: a frontend UI and an AI-powered b
 
 ## 🤖 The AI Model
 
-The core of AgriSmart is a sophisticated Machine Learning pipeline:
+The core of CropIQ is a sophisticated Machine Learning pipeline:
 - **Algorithm**: Random Forest Classifier
 - **Features Analyzed (9)**: Nitrogen (N), Phosphorus (P), Potassium (K), Temperature, Humidity, pH, Rainfall, Budget, and State.
 - **Output**: Predicts probabilities across ~22 different crop classes.
@@ -57,7 +57,7 @@ The core of AgriSmart is a sophisticated Machine Learning pipeline:
 1. Clone the repository and navigate to the backend directory:
    ```bash
    git clone <repository-url>
-   cd AgriSmart/backend
+   cd CropIQ/backend
    ```
 2. Create and activate a fresh Python virtual environment:
    - **Windows:** `python -m venv venv` then `.\venv\Scripts\activate`
@@ -77,7 +77,7 @@ The core of AgriSmart is a sophisticated Machine Learning pipeline:
 
 1. Open a new terminal and navigate to the frontend directory:
    ```bash
-   cd AgriSmart/frontend
+   cd CropIQ/frontend
    ```
 2. Install dependencies:
    ```bash
